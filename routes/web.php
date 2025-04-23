@@ -34,5 +34,11 @@ Route::middleware('auth')->group(function () {
     Route::put('guru/update/{id}', [GuruController::class, 'update'])->name('guru.update');
 
     // routes laporan
-    Route::get('/laporan/siswa-kelas-guru', [LaporanController::class, 'index'])->name('laporan.siswa-kelas-guru');
+    Route::get('/laporan/siswa-kelas', [App\Http\Controllers\LaporanController::class, 'siswaPerKelas'])->name('laporan.siswaPerKelas');
+    Route::get('/laporan/guru-kelas', [App\Http\Controllers\LaporanController::class, 'guruPerKelas'])->name('laporan.guruPerKelas');
+    Route::get('/laporan/siswa-kelas-guru', [App\Http\Controllers\LaporanController::class, 'siswaKelasGuru'])->name('laporan.siswaKelasGuru');
+
+    Route::get('/laporan/data/siswa-kelas', [App\Http\Controllers\LaporanController::class, 'getSiswaPerKelas']);
+    Route::get('/laporan/data/guru-kelas', [App\Http\Controllers\LaporanController::class, 'getGuruPerKelas']);
+    Route::get('/laporan/data/siswa-kelas-guru', [App\Http\Controllers\LaporanController::class, 'getSiswaKelasGuru']);
 });

@@ -21,15 +21,26 @@
                     <a class="nav-link" href="{{ route('siswa.index') }}">Siswa</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('kelas.index') }}">Kelas</a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link" href="{{ route('guru.index') }}">Guru</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('laporan.siswa-kelas-guru') }}">Laporan</a>
+                    <a class="nav-link" href="{{ route('kelas.index') }}">Kelas</a>
+                </li>
+                <!-- Dropdown menu untuk laporan -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        List
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{{ route('laporan.siswaPerKelas') }}">Siswa per Kelas</a>
+                        </li>
+                        <li><a class="dropdown-item" href="{{ route('laporan.guruPerKelas') }}">Guru per Kelas</a></li>
+                        <li><a class="dropdown-item" href="{{ route('laporan.siswaKelasGuru') }}">Siswa, Kelas &
+                                Guru</a></li>
+                    </ul>
                 </li>
             </ul>
+
             <form action="{{ route('logout') }}" method="GET" class="d-flex">
                 @csrf
                 <button class="btn btn-outline-light btn-sm" type="submit">Logout</button>
