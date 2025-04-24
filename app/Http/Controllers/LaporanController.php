@@ -27,35 +27,65 @@ class LaporanController extends Controller
 
     public function getSiswaPerKelas()
     {
-        $data = Siswa::with('kelas')->get();
+        $kelas = Kelas::with('siswa')->get();
+
+        $data = $kelas->map(function ($kls) {
+            $siswaList = '<ul>' . $kls->siswa->map(function ($siswa) {
+                return '<li>' . $siswa->nama . ' (' . $siswa->nisn . ')</li>';
+            })->join('') . '</ul>';
+
+            return [
+                'kelas' => $kls->nama_kelas,
+                'siswa' => $siswaList
+            ];
+        });
+
         return DataTables::of($data)
-            ->addIndexColumn()
-            ->addColumn('kelas', fn($row) => $row->kelas->nama_kelas ?? '-')
-            ->make(true);
+            ->rawColumns(['siswa'])->make(true);
     }
 
     public function getGuruPerKelas()
     {
-        $data = Guru::with('kelas')->get();
+        $kelas = Kelas::with('guru')->get();
+
+        $data = $kelas->map(function ($kls) {
+            $guruList = '<ul>' . $kls->guru->map(function ($guru) {
+                return '<li>' . $guru->nama . ' (' . $guru->nip . ')</li>';
+            })->join('') . '</ul>';
+
+            return [
+                'kelas' => $kls->nama_kelas,
+                'guru' => $guruList
+            ];
+        });
+
         return DataTables::of($data)
-            ->addIndexColumn()
-            ->addColumn('kelas', fn($row) => $row->kelas->nama_kelas ?? '-')
+            ->rawColumns(['guru'])
             ->make(true);
     }
 
     public function getSiswaKelasGuru()
     {
-        $data = Siswa::with('kelas.guru')->get();
+        $kelas = Kelas::with('siswa', 'guru')->get();
+
+        $data = $kelas->map(function ($kls) {
+            $siswaList = '<ul>' . $kls->siswa->map(function ($siswa) {
+                return '<li>' . $siswa->nama . ' (' . $siswa->nisn . ')</li>';
+            })->join('') . '</ul>';
+
+            $guruList = '<ul>' . $kls->guru->map(function ($guru) {
+                return '<li>' . $guru->nama . ' (' . $guru->nip . ')</li>';
+            })->join('') . '</ul>';
+
+            return [
+                'kelas' => $kls->nama_kelas,
+                'siswa' => $siswaList,
+                'guru' => $guruList
+            ];
+        });
 
         return DataTables::of($data)
-            ->addIndexColumn()
-            ->addColumn('kelas', fn($row) => $row->kelas->nama_kelas ?? '-')
-            ->addColumn('guru', function ($row) {
-                if ($row->kelas && $row->kelas->guru) {
-                    return $row->kelas->guru->pluck('nama')->implode(', ');
-                }
-                return '-';
-            })
+            ->rawColumns(['guru', 'siswa'])
             ->make(true);
     }
 }

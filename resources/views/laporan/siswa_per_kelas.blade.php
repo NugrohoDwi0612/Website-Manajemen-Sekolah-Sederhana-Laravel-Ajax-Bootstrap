@@ -6,10 +6,8 @@
     <table class="table table-bordered" id="siswaKelasTable">
         <thead>
             <tr>
-                <th>No</th>
-                <th>Nama Siswa</th>
-                <th>NISN</th>
                 <th>Kelas</th>
+                <th>Nama Siswa</th>
             </tr>
         </thead>
     </table>
@@ -18,29 +16,21 @@
 
 @push('scripts')
 <script>
-    $(function() {
-        $('#siswaKelasTable').DataTable({
-            processing: true,
-            serverSide: true,
-            ajax: "{{ url('/laporan/data/siswa-kelas') }}",
-            columns: [{
-                    data: 'DT_RowIndex',
-                    name: 'DT_RowIndex'
-                },
-                {
-                    data: 'nama',
-                    name: 'nama'
-                },
-                {
-                    data: 'nisn',
-                    name: 'nisn'
-                },
-                {
-                    data: 'kelas',
-                    name: 'kelas'
-                },
-            ]
-        });
+$(function() {
+    $('#siswaKelasTable').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: "{{ url('/laporan/data/siswa-kelas') }}",
+        columns: [{
+                data: 'kelas',
+                name: 'kelas'
+            },
+            {
+                data: 'siswa',
+                name: 'siswa'
+            },
+        ]
     });
+});
 </script>
 @endpush

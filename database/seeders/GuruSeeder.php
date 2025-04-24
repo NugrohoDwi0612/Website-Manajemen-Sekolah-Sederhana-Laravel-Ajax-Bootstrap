@@ -12,12 +12,14 @@ class GuruSeeder extends Seeder
     {
         $kelas = Kelas::all();
 
-        foreach ($kelas as $index => $k) {
-            Guru::create([
-                'nama' => 'Guru ' . $k->nama_kelas,
-                'nip' => '19870' . rand(10000, 99999),
-                'kelas_id' => $k->id,
-            ]);
+        foreach ($kelas as $k) {
+            for ($i = 1; $i <= 5; $i++) {
+                Guru::create([
+                    'nama' => 'Guru ' . $i . ' ' . $k->nama_kelas,
+                    'nip' => '19870' . rand(10000, 99999),
+                    'kelas_id' => $k->id,
+                ]);
+            }
         }
     }
 }

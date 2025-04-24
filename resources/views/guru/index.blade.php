@@ -59,94 +59,94 @@
 
 @push('scripts')
 <script>
-    $(function() {
-        let table = $('#guruTable').DataTable({
-            processing: true,
-            serverSide: true,
-            ajax: "{{ route('guru.index') }}",
-            columns: [{
-                    data: 'DT_RowIndex',
-                    name: 'DT_RowIndex'
-                },
-                {
-                    data: 'nama',
-                    name: 'nama'
-                },
-                {
-                    data: 'nip',
-                    name: 'nip'
-                },
-                {
-                    data: 'kelas',
-                    name: 'kelas'
-                },
-                {
-                    data: 'action',
-                    name: 'action',
-                    orderable: false,
-                    searchable: false
-                }
-            ]
-        });
+$(function() {
+    let table = $('#guruTable').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: "{{ route('guru.index') }}",
+        columns: [{
+                data: 'DT_RowIndex',
+                name: 'DT_RowIndex'
+            },
+            {
+                data: 'nama',
+                name: 'nama'
+            },
+            {
+                data: 'nip',
+                name: 'nip'
+            },
+            {
+                data: 'kelas',
+                name: 'kelas'
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
+            }
+        ]
+    });
 
-        $('#createNewGuru').click(function() {
-            $('#guru_id').val('');
-            $('#guruForm').trigger("reset");
-            $('#guruModalLabel').html("Tambah Guru");
+    $('#createNewGuru').click(function() {
+        $('#guru_id').val('');
+        $('#guruForm').trigger("reset");
+        $('#guruModalLabel').html("Tambah Guru");
+        $('#guruModal').modal('show');
+    });
+
+    $('body').on('click', '.editGuru', function() {
+        let id = $(this).data('id');
+        $.get("{{ url('guru/edit') }}/" + id, function(data) {
+            $('#guruModalLabel').html("Edit Guru");
             $('#guruModal').modal('show');
+            $('#guru_id').val(data.id);
+            $('#nama').val(data.nama);
+            $('#nip').val(data.nip);
+            $('#kelas_id').val(data.kelas_id);
         });
+    });
 
-        $('body').on('click', '.editGuru', function() {
-            let id = $(this).data('id');
-            $.get("{{ url('guru/edit') }}/" + id, function(data) {
-                $('#guruModalLabel').html("Edit Guru");
-                $('#guruModal').modal('show');
-                $('#guru_id').val(data.id);
-                $('#nama').val(data.nama);
-                $('#nip').val(data.nip);
-                $('#kelas_id').val(data.kelas_id);
-            });
-        });
+    $('#guruForm').submit(function(e) {
+        e.preventDefault();
+        let id = $('#guru_id').val();
+        let method = id ? 'PUT' : 'POST';
+        let url = id ? "/guru/update/" + id : "{{ route('guru.store') }}";
 
-        $('#guruForm').submit(function(e) {
-            e.preventDefault();
-            let id = $('#guru_id').val();
-            let method = id ? 'PUT' : 'POST';
-            let url = id ? "/guru/update/" + id : "{{ route('guru.store') }}";
-
-            $.ajax({
-                data: $('#guruForm').serialize(),
-                url: url,
-                type: method,
-                success: function(data) {
-                    $('#guruForm').trigger("reset");
-                    $('#guruModal').modal('hide');
-                    table.draw();
-                },
-                error: function(xhr) {
-                    let response = xhr.responseJSON;
-                    if (response && response.errors) {
-                        alert(Object.values(response.errors).join("\n"));
-                    }
+        $.ajax({
+            data: $('#guruForm').serialize(),
+            url: url,
+            type: method,
+            success: function(data) {
+                $('#guruForm').trigger("reset");
+                $('#guruModal').modal('hide');
+                table.draw();
+            },
+            error: function(xhr) {
+                let response = xhr.responseJSON;
+                if (response && response.errors) {
+                    alert(Object.values(response.errors).join("\n"));
                 }
-            });
-        });
-
-        $('body').on('click', '.deleteGuru', function() {
-            let id = $(this).data("id");
-            if (confirm("Yakin ingin menghapus guru ini?")) {
-                $.ajax({
-                    type: "DELETE",
-                    url: "{{ url('guru') }}/" + id,
-                    data: {
-                        "_token": "{{ csrf_token() }}"
-                    },
-                    success: function(data) {
-                        table.draw();
-                    }
-                });
             }
         });
     });
+
+    $('body').on('click', '.deleteGuru', function() {
+        let id = $(this).data("id");
+        if (confirm("Yakin ingin menghapus guru ini?")) {
+            $.ajax({
+                type: "DELETE",
+                url: "{{ url('guru') }}/" + id,
+                data: {
+                    "_token": "{{ csrf_token() }}"
+                },
+                success: function(data) {
+                    table.draw();
+                }
+            });
+        }
+    });
+});
 </script>
 @endpush

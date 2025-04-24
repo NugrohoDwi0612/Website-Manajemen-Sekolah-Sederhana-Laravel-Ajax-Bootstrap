@@ -6,10 +6,8 @@
     <table class="table table-bordered" id="siswaKelasGuruTable">
         <thead>
             <tr>
-                <th>No</th>
-                <th>Nama Siswa</th>
-                <th>NISN</th>
                 <th>Kelas</th>
+                <th>Siswa</th>
                 <th>Guru</th>
             </tr>
         </thead>
@@ -25,20 +23,12 @@
             serverSide: true,
             ajax: "{{ url('/laporan/data/siswa-kelas-guru') }}",
             columns: [{
-                    data: 'DT_RowIndex',
-                    name: 'DT_RowIndex'
-                },
-                {
-                    data: 'nama',
-                    name: 'nama'
-                },
-                {
-                    data: 'nisn',
-                    name: 'nisn'
-                },
-                {
                     data: 'kelas',
                     name: 'kelas'
+                },
+                {
+                    data: 'siswa',
+                    name: 'siswa'
                 },
                 {
                     data: 'guru',
