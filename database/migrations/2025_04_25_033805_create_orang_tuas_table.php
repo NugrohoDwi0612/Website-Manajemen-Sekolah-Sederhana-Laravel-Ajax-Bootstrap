@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('siswas', function (Blueprint $table) {
-            // migration
-            $table->foreignId('kelas_id')->nullable()->constrained('kelas')->onDelete('set null');
+        Schema::create('orang_tuas', function (Blueprint $table) {
+            $table->id();
+            $table->string('nama_orangtua');
+            $table->string('no_hp');
+            $table->timestamps();
         });
     }
 
@@ -22,8 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('siswas', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('orang_tuas');
     }
 };

@@ -11,6 +11,7 @@
                 <th>Nama</th>
                 <th>NISN</th>
                 <th>Kelas</th>
+                <th>Orang Tua</th>
                 <th>Aksi</th>
             </tr>
         </thead>
@@ -43,6 +44,15 @@
                             <option value="">-- Pilih Kelas --</option>
                             @foreach($kelas as $kls)
                             <option value="{{ $kls->id }}">{{ $kls->nama_kelas }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="orangtua_id" class="form-label">Orang Tua</label>
+                        <select name="orangtua_id" id="orangtua_id" class="form-select" required>
+                            <option value="">-- Pilih Orang Tua --</option>
+                            @foreach($orangtua as $ot)
+                            <option value="{{ $ot->id }}">{{ $ot->nama_orangtua }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -88,6 +98,10 @@
                     name: 'kelas'
                 },
                 {
+                    data: 'orang_tua',
+                    name: 'orang_tua'
+                },
+                {
                     data: 'action',
                     name: 'action',
                     orderable: false,
@@ -103,7 +117,6 @@
             $('#siswaModal').modal('show');
         });
 
-        // Edit siswa
         $('body').on('click', '.editSiswa', function() {
             let id = $(this).data('id');
             $.get("{{ url('siswa/edit') }}/" + id, function(data) {
@@ -113,13 +126,14 @@
                 $('#nama').val(data.nama);
                 $('#nisn').val(data.nisn);
                 $('#kelas_id').val(data.kelas_id);
+                $('#orangtua_id').val(data.orangtua_id);
             });
         });
 
-        // Handle form submit for both create and edit
         $('#siswaForm').submit(function(e) {
             e.preventDefault();
-            let actionUrl = $('#siswa_id').val() ? "{{ url('siswa') }}/" + $('#siswa_id').val() : "{{ route('siswa.store') }}";
+            let actionUrl = $('#siswa_id').val() ? "{{ url('siswa') }}/" + $('#siswa_id').val() :
+                "{{ route('siswa.store') }}";
             let method = $('#siswa_id').val() ? 'PUT' : 'POST';
 
             $.ajax({
@@ -137,7 +151,7 @@
             });
         });
 
-        // Delete siswa
+
         $('body').on('click', '.deleteSiswa', function() {
             let id = $(this).data("id");
             if (confirm("Yakin ingin menghapus siswa ini?")) {

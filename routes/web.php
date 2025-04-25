@@ -8,6 +8,7 @@ use App\Http\Controllers\KelasController;
 use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\OrangtuaController;
 
 // routes auth
 Route::get('/', [AuthController::class, 'showLogin'])->name('login');
@@ -27,6 +28,11 @@ Route::middleware('auth')->group(function () {
     Route::resource('kelas', KelasController::class);
     Route::get('/kelas/edit/{id}', [KelasController::class, 'edit'])->name('kelas.edit');
     Route::put('/kelas/update/{id}', [KelasController::class, 'update']);
+
+    // routes Orang Tua
+    Route::resource('orangtua', OrangtuaController::class);
+    Route::get('/orangtua/edit/{id}', [OrangtuaController::class, 'edit'])->name('orangtua.edit');
+    Route::put('/orangtua/update/{id}', [OrangtuaController::class, 'update']);
 
     // routes guru
     Route::resource('guru', GuruController::class);

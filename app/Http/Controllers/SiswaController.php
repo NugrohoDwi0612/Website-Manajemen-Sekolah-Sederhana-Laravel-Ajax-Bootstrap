@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Siswa;
 use App\Models\Kelas;
+use App\Models\Siswa;
+use App\Models\OrangTua;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 
@@ -12,11 +13,14 @@ class SiswaController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Siswa::with('kelas')->latest()->get();
+            $data = Siswa::with(['kelas', 'orangTua'])->latest()->get();
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('kelas', function ($row) {
                     return $row->kelas->nama_kelas ?? '-';
+                })
+                ->addColumn('orang_tua', function ($row) {
+                    return $row->orangTua->nama_orangtua ?? '-';
                 })
                 ->addColumn('action', function ($row) {
                     $btn = '<a href="javascript:void(0)" data-id="' . $row->id . '" class="edit btn btn-warning btn-sm editSiswa">Edit</a> ';
@@ -28,25 +32,28 @@ class SiswaController extends Controller
         }
 
         $kelas = Kelas::all();
-        return view('siswa.index', compact('kelas'));
+        $orangtua = OrangTua::all();
+        return view('siswa.index', compact('kelas', 'orangtua'));
     }
 
 
     public function store(Request $request)
     {
-        // Validasi input
+
         $validated = $request->validate([
             'nama' => 'required|string|max:255',
             'nisn' => 'required|numeric|unique:siswas,nisn',
             'kelas_id' => 'required|exists:kelas,id',
+            'orangtua_id' => 'required|exists:orang_tuas,id',
         ]);
 
         try {
-            // Menyimpan data siswa
+
             Siswa::create([
                 'nama' => $validated['nama'],
                 'nisn' => $validated['nisn'],
                 'kelas_id' => $validated['kelas_id'],
+                'orangtua_id' => $validated['orangtua_id'],
             ]);
 
             return response()->json(['success' => 'Data siswa berhasil disimpan']);
@@ -54,6 +61,7 @@ class SiswaController extends Controller
             return response()->json(['error' => 'Terjadi kesalahan: ' . $e->getMessage()], 500);
         }
     }
+
 
 
     public function edit($id)
@@ -66,16 +74,18 @@ class SiswaController extends Controller
     {
         $siswa = Siswa::findOrFail($id);
 
-        $request->validate([
+        $validated = $request->validate([
             'nama' => 'required|string|max:255',
             'nisn' => 'required|string|max:20|unique:siswas,nisn,' . $id,
             'kelas_id' => 'required|exists:kelas,id',
+            'orangtua_id' => 'required|exists:orang_tuas,id',
         ]);
 
-        $siswa->update($request->all());
+        $siswa->update($validated);
 
         return response()->json(['success' => 'Siswa berhasil diperbarui.']);
     }
+
 
     public function destroy($id)
     {

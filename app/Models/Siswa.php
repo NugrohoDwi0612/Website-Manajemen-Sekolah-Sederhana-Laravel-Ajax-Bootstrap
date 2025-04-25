@@ -11,12 +11,17 @@ class Siswa extends Model
 
     protected $table = 'siswas';
 
-    protected $fillable = ['nama', 'nisn', 'kelas_id'];
+    protected $fillable = ['nama', 'nisn', 'kelas_id', 'orangtua_id'];
 
 
 
     public function kelas()
     {
         return $this->belongsTo(Kelas::class);
+    }
+
+    public function orangtua()
+    {
+        return $this->belongsTo(OrangTua::class);
     }
 }
